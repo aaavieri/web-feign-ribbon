@@ -27,8 +27,8 @@ public class FeignDecoder implements Decoder {
 	 */
 	public FeignDecoder() {
 		this.decoderList = new ArrayList<Decoder>();
-		this.decoderList.add(new GsonDecoder());
 		this.decoderList.add(new StringDecoder());
+		this.decoderList.add(new GsonDecoder());
 	}
 	
 	/**

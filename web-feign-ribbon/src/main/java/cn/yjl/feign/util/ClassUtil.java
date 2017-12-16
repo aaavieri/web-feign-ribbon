@@ -27,6 +27,19 @@ public class ClassUtil {
 
 	/** 判断是否有spring环境的类名 */
 	private static String SPRING_FEATURE_CLASS_NAME =  "org.springframework.web.context.ContextLoader";
+	
+
+	public static <T> List<Class<T>> getClasses(String packageName) {
+		return getClasses(packageName, null);
+	}
+
+	public static <T> List<Class<T>> getClasses(String packageName, Class<T> parentClazz) {
+		return getClasses(packageName, parentClazz, null);
+	}
+	
+	public static <A extends Annotation, T> List<Class<T>> getClasses(String packageName, Class<T> parentClazz, Class<A> annotation) {
+		return getClasses(packageName, parentClazz, annotation, null);
+	}
 
 	/**
 	 * 获取指定包下面的类
@@ -35,7 +48,7 @@ public class ClassUtil {
 	 * @param annotation
 	 * @return
 	 */
-	public static <A extends Annotation, T> List<Class<T>> getClasses(String packageName, Class<T> parentClazz, Class<A> annotation) {
+	public static <A extends Annotation, T> List<Class<T>> getClasses(String packageName, Class<T> parentClazz, Class<A> annotation, List<String> jarFiles) {
 		List<Class<T>> classes = new ArrayList<Class<T>>();
 		String packageDirName = packageName.replace('.', '/');
 		// 定义一个枚举的集合 并进行循环来处理这个目录下的things
@@ -59,6 +72,10 @@ public class ClassUtil {
 					// 获取jar
 					JarFile jar = ((JarURLConnection) url.openConnection())
 							.getJarFile();
+					// 如果指定了jar包，则判断是否是指定的jar包
+					if (jarFiles != null && !jarFiles.contains(jar.getName())) {
+						continue;
+					}
 					// 从此jar包 得到一个枚举类
 					Enumeration<JarEntry> entries = jar.entries();
 					// 同样的进行循环迭代

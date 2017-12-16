@@ -6,8 +6,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.core.annotation.AliasFor;
-
 /**
  * 注解feignClient对应服务的ID
  * @author yjl
@@ -23,12 +21,10 @@ public @interface LinkService {
 	 * name}. A name must be specified for all clients, whether or not a url is provided.
 	 * Can be specified as property key, eg: ${propertyKey}.
 	 */
-	@AliasFor("name")
 	String value() default "";
 
 	/**
 	 * The service id with optional protocol prefix. Synonym for {@link #value() value}.
 	 */
-	@AliasFor("value")
 	String name() default "";
 }

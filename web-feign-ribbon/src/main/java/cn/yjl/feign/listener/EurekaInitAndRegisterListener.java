@@ -1,6 +1,7 @@
 package cn.yjl.feign.listener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -94,6 +95,11 @@ public class EurekaInitAndRegisterListener implements ServletContextListener {
 		String[] feignPakcages = configInstance
 				.getStringProperty("feign.client.packages", "").get()
 				.split(",");
+		
+		String[] feignJars = configInstance
+				.getStringProperty("feign.client.jars", "").get()
+				.split(",");
+		List<String> feignJarList = Arrays.asList(feignJars);
 		// 获取所有的feignClient加载器
 		List<ILoader> loaderList = LoaderFactory.getLoaderList();
 		// 所有注册到eureka的service的ID集合
@@ -103,7 +109,7 @@ public class EurekaInitAndRegisterListener implements ServletContextListener {
 			log.info("开始载入feign包：" + feignPackage);
 			// 获取该包下面，所有继承ParentClient并有LinkService注解的feignClient
 			// 之所以不用FeignClient注解，是因这个注解在feign-cloud的包里，容易把spring-cloud的东西扯到一起
-			List<Class<ParentClient>> clientList = ClassUtil.getClasses(feignPackage, ParentClient.class, LinkService.class);
+			List<Class<ParentClient>> clientList = ClassUtil.getClasses(feignPackage, ParentClient.class, LinkService.class, feignJarList);
 			// 遍历包下面所有的feignClient
 			for (Class<ParentClient> clazz : clientList) {
 				// 获取linkService注解中的serviceId
